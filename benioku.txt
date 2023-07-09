@@ -1,0 +1,176 @@
+İnternet sitesi Tasarımını bootstrap teması kullanarak bizzat kendim yaptığım
+Laravel framework ile yazılmış MVC mimarisine uygun bir blog sitesidir.
+Sitede kullanıcılar ve bloglar bulunmaktadır. Kullanıcılar ve bloglar
+eklenebilir, düzenlenebilir, silinebilirler. Blogların kategorileri bulunmaktadır.
+
+Sitede yalnızca yetkili kullanıcıların erişebileceği controllerlar:
+    [
+        app/Http/Controllers/Internal/HomeController => Admin Anasayfası
+        app/Http/Controllers/Internal/BlogController => Blogların düzenlenmesi, silinmesi, eklenmesi listelenmesi
+        app/Http/Controllers/Internal/UserController => Kullanıcıların düzenlenmesi, silinmesi, eklenmesi listelenmesi
+    ]
+app/Http/Controllers/Internal/Auth/LoginController => Admin yetkisi gereken sayfalar için otomatik yönlendirilir.
+
+Herkesin erişebileceği public controllerlar:
+    [
+        app/Http/Controllers/Controller => BaseControllerdan türetilmiş abstract Controller,
+            app/ dizinindeki diğer controllerlar Controller'dan türetilecektir.
+        app/Http/Controllers/BlogController => Blogların listelenmesi ve görüntülenmesi, okunması
+        app/Http/Controllers/HomeController => Anasayfa görüntülenmesi için Controller
+    ]
+    
+    
+JQUERY
+1-) HİZMETLER LİSTESİ FARE ÜZERİNDEYKEN AÇILIR FARE ÇIKINCA KAPANIR
+    $(document).ready(function(){
+        $(".hizmetler").mouseenter(function(){
+            $(".hizmetler > ul").show();
+            console.log("se");
+        });
+        $(".hizmetler").mouseleave(function(){
+            $(".hizmetler > ul").hide();
+            console.log("se");
+        });
+    });
+
+2-) ANASAYFADA TEKNOLOJİLER KISMINDAKİ KARTLARIN ARKASI
+FARE ÜZERİNDEYKEN AYDINLANIR FARE ÇIKINCA GÖLGELENİR
+    $('.card-body').on('mouseenter', function (){
+        $(this).removeClass('shadow-lg')
+        $(this).addClass('shadow-sm')
+    })
+    $('.card-body').on('mouseleave', function (){
+        $(this).addClass('shadow-lg')
+        $(this).removeClass('shadow-sm')
+    })
+   
+
+
+MODALBOX'LAR (ÇIKIŞ YAP ONAYI, UYARILAR VS.)
+modalTemplate bootstrap'in modal'ı, bunu sabit olarak js'e ekledim.
+openModal fonksiyonu, modal açılması gereken yerlerde title, body, footer ve size değişkenleri
+belirtilerek kolayca çağırılabiir ve modal gösterilir.
+JAVASCRIPT:
+    const modalTemplate = `<div class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>`;
+    function openModal(
+        title,
+        body,
+        footer,
+        size
+    ) {
+        let modalContent = $(modalTemplate);
+        modalContent.find(".modal-title").text(title);
+        modalContent.find(".modal-body").append(body);
+        modalContent.find(".modal-footer").append(footer);
+        modalContent.find(".modal-dialog").addClass(size);
+        let modal = new bootstrap.Modal(modalContent);
+        modal.show();
+        return [modal, modalContent];
+    }
+
+BLOG EKLERKEN BLOG BAŞLIĞINA GÖRE LİNK ÜRETEN FONKSİYON:
+    $('#blogTitle').on('keyup', function () {
+            $('#url').val(toSeoUrl($(this).val()))
+        })
+        function toSeoUrl(url) {
+            return url.toString()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g,'')
+                .replace(/\s+/g,'-')
+                .toLowerCase()
+                .replace(/&/g,'-and-')
+                .replace(/[^a-z0-9\-]/g,'')
+                .replace(/-+/g,'-')
+                .replace(/^-*/,'')
+                .replace(/-*$/,'');
+        }
+
+ADMIN SIDEBAR:
+bootstrap admin paneli, projeme göre değiştirdim. Admin anasayfasında blog ve kullanıcılar için
+düzenleme ve listeleme sayfalarına erişim linklerini görüntülemektedir.
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('view.home') }}">
+            <div class="sidebar-brand-icon">
+                <img src="{{ asset('common/img/logos/logo.png') }}" style="max-width: 40px">
+            </div>
+        </a>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('view.admin.home') }}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Gözetim Paneli</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Arayüz
+        </div>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseBlog"
+            aria-expanded="true" aria-controls="collapseBlogs">
+                <i class="fas fa-fw fa-pen"></i>
+                <span>Blog</span>
+            </a>
+            <div id="collapseBlog" class="collapse" aria-labelledby="headingBlog" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Blog:</h6>
+                    <a class="collapse-item" href="{{ route('view.admin.blog.create') }}"><span class="fa fa-plus"></span> Yeni Oluştur</a>
+                    <a class="collapse-item" href="{{ route('view.admin.blogs.home') }}">Göster / Düzenle</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Araçlar
+        </div>
+
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true"
+            aria-controls="collapseUsers">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Kullanıcılar</span>
+            </a>
+            <div id="collapseUsers" class="collapse" aria-labelledby="headingUsers"
+                data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Kullanıcılar:</h6>
+                    <a class="collapse-item" href="{{ route('view.admin.user.create') }}"><span class="fa fa-plus"></span> Yeni Oluştur</a>
+                    <a class="collapse-item" href="{{ route('view.admin.users.home') }}">Göster / Düzenle</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+    </ul>

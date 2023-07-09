@@ -1,0 +1,9 @@
+Dönem sonu değerlendirmenize %30 olarak etki edecek vize ödevinizin kapsamı ve uyulması gereken kurallar aşağıdaki gibidir.
+HTML5, CSS3, Javascript ve Jquery (React, Vue, Angular da olabilir) kullanarak herhangi bir konuda bir blog sayfası geliştiriniz. Konularınız farklı olacağı için sitenin sahip olacağı özelliklerle ilgili minimum gereklilik olmamakla beraber, sayfanızı farklı elementler ve özellikler kullanarak olabildiğince zenginleştiriniz.
+ Hazır bir siteyi değiştirme yoluna gitmeyiniz.
+ Hazır bir kod parçasını sitenize uyarlayarak değiştirerek kullanınız.
+ Sitenizle ilgili kısa bilgi, eklediğiniz özeliklerinin nerede nasıl çalıştığını ve varsa hazır kullandığınız kod parçalarını açıklayan  "BeniOku.txt" dosyası hazırlayarak sitenizle beraber yükleyiniz.
+Sitenizi zip formatında tek bir dosya olarak sisteme yükleyiniz.
+Mail ve mesaj yoluyla ödev göndermeyiniz.
+Son teslim tarihinden sonra gönderilen ödevler değerlendirmeye alınmayacaktır.
+İyi çalışmalar dilerim.
